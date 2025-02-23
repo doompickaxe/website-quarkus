@@ -1,0 +1,233 @@
+openapi: 3.0.3
+info:
+  title: CV
+  description: |-
+    This is the API to retrieve information about me and my career so far.
+  contact:
+    email: kwatzal@gmail.com
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api
+tags:
+  - name: personal
+    description: Information about me personally
+  - name: career
+    description: My previous career path
+  - name: education
+    description: The schools and universities I've attended
+paths:
+  /personal:
+    get:
+      tags:
+        - personal
+      description: General information and things to know about me
+      operationId: getPersonalInformation
+      responses:
+        '200':
+          description: Retrieved personal information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInformation'
+        '500':
+          description: An unexpected error has occurred
+
+  /career:
+    get:
+      tags:
+        - career
+      description: The career path until today
+      operationId: getCareerPath
+      responses:
+        '200':
+          description: Career path until today
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareerPath'
+        '500':
+          description: An unexpected error has occurred
+
+  /education:
+    get:
+      tags:
+        - education
+      description: The schools and universities I've attended
+      operationId: getEducationPath
+      responses:
+        '200':
+          description: Schools and universities I've attended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EducationPath'
+        '500':
+          description: An unexpected error has occurred
+
+components:
+  schemas:
+    PersonalInformation:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - age
+        - email
+        - languages
+        - interests
+        - currentlyLivingIn
+      properties:
+        firstName:
+          type: string
+          example: "Max"
+        lastName:
+          type: string
+          example: "Mustermann"
+        age:
+          type: integer
+          format: int32
+          example: 33
+          minimum: 0
+        email:
+          type: string
+          example: "sample@email.com"
+        phoneNumber:
+          type: string
+          example: "+43618999997"
+        originalFrom:
+          $ref: '#/components/schemas/City'
+        currentlyLivingIn:
+          $ref: '#/components/schemas/City'
+        languages:
+          type: array
+          items:
+            type: string
+            example: "English"
+        interests:
+          type: array
+          items:
+            type: string
+            example: "Writing OpenAPI specs"
+
+    City:
+      type: object
+      required:
+        - country
+        - city
+      properties:
+        country:
+          type: string
+        city:
+          type: string
+
+    CareerPath:
+      type: array
+      items:
+        $ref: '#/components/schemas/CareerItem'
+
+    CareerItem:
+      type: object
+      required:
+        - company
+        - start
+        - jobDescription
+        - tasks
+      properties:
+        company:
+          $ref: '#/components/schemas/Company'
+        start:
+          type: string
+          format: date
+          example: 21-01-1970
+          description: Date in format dd-MM-yyyy
+        end:
+          type: string
+          format: date
+          example: 31-12-1970
+          description: Date in format dd-MM-yyyy
+        jobDescription:
+          type: string
+          example: Backend Developer
+        tasks:
+          type: string
+          example: Writing OpenAPI specifications
+
+    Company:
+      type: object
+      required:
+        - name
+        - branch
+        - city
+        - amountOfEmployees
+      properties:
+        name:
+          type: string
+          example: Test Company LLC
+        branch:
+          type: string
+          example: Fiction
+        city:
+          $ref: '#/components/schemas/City'
+        amountOfEmployees:
+          type: integer
+          description: Rough estimation of the amount of employees
+
+    EducationPath:
+      type: array
+      items:
+        $ref: '#/components/schemas/EducationItem'
+
+    EducationItem:
+      type: object
+      required:
+        - schoolName
+        - city
+        - start
+        - degree
+        - educationType
+      properties:
+        schoolName:
+          type: string
+          example: Making people smart
+        city:
+          $ref: '#/components/schemas/City'
+        start:
+          type: string
+          format: date
+          example: 31-12-1970
+          description: Date in format dd-MM-yyyy
+        end:
+          type: string
+          format: date
+          example: 31-12-1970
+          description: |
+            Date in format dd-MM-yyyy. In case this field is missing it indicates that I am still
+            attending this institution.
+        degree:
+          type: string
+          example: Bachelor of Science
+        description:
+          type: string
+          description: What I've learned during that time
+        educationType:
+          type: string
+          enum:
+            - ELEMENTARY_SCHOOL
+            - SECONDARY_SCHOOL
+            - COLLEGE
+            - UNIVERSITY
+
+  # todo
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://petstore3.swagger.io/oauth/authorize
+          scopes:
+            write:pets: modify pets in your account
+            read:pets: read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
