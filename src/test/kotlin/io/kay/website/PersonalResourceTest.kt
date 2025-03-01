@@ -1,18 +1,17 @@
 package io.kay.website
 
-import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.junit.QuarkusIntegrationTest
 import io.restassured.RestAssured.given
-import org.hamcrest.CoreMatchers.`is`
 import org.junit.jupiter.api.Test
 
-@QuarkusTest
+@QuarkusIntegrationTest
 class PersonalResourceTest {
 
     @Test
     fun testHelloEndpoint() {
         given()
-          .`when`().get("/api/personal")
-          .then()
-             .statusCode(200)
+            .`when`().get("/api/persons")
+            .then()
+            .statusCode(200)
     }
 }

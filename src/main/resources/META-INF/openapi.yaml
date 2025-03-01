@@ -9,19 +9,43 @@ info:
 servers:
   - url: http://localhost:8080/api
 tags:
-  - name: personal
-    description: Information about me personally
+  - name: persons
+    description: Information about people
   - name: career
-    description: My previous career path
+    description: Previous career path
   - name: education
-    description: The schools and universities I've attended
+    description: Schools and universities that have been attended
 paths:
-  /personal:
+  /persons:
     get:
       tags:
-        - personal
+        - persons
+      description: Retrieve all stored people
+      operationId: getPersons
+      responses:
+        '200':
+          description: All stored people
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Persons'
+        '500':
+          description: An unexpected error has occurred
+
+  /persons/{id}:
+    get:
+      tags:
+        - persons
       description: General information and things to know about me
       operationId: getPersonalInformation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
       responses:
         '200':
           description: Retrieved personal information
@@ -29,15 +53,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PersonalInformation'
+        '404':
+          description: Could not find person
         '500':
           description: An unexpected error has occurred
 
-  /career:
+  /persons/{id}/career:
     get:
       tags:
         - career
       description: The career path until today
       operationId: getCareerPath
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
       responses:
         '200':
           description: Career path until today
@@ -48,12 +82,20 @@ paths:
         '500':
           description: An unexpected error has occurred
 
-  /education:
+  /persons/{id}/education:
     get:
       tags:
         - education
       description: The schools and universities I've attended
       operationId: getEducationPath
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
       responses:
         '200':
           description: Schools and universities I've attended
@@ -66,6 +108,29 @@ paths:
 
 components:
   schemas:
+    Persons:
+      type: array
+      items:
+        $ref: '#/components/schemas/Person'
+
+    Person:
+      type: object
+      required:
+        - id
+        - firstname
+        - lastname
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
+        firstname:
+          type: string
+          example: John
+        lastname:
+          type: string
+          example: Doe
+
     PersonalInformation:
       type: object
       required:
