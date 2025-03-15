@@ -1,9 +1,12 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.0.21'
-    id 'org.jetbrains.kotlin.plugin.allopen' version '2.0.21'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.21'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.10'
+    id 'org.jetbrains.kotlin.plugin.allopen' version '2.1.10'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.1.10'
+    id "org.jetbrains.kotlin.kapt" version '2.1.10'
     id 'io.quarkus'
-    id 'org.openapi.generator' version '7.11.0'
+    id 'java'
+    id 'idea'
+    id 'org.openapi.generator' version '7.12.0'
 }
 
 repositories {
@@ -14,24 +17,23 @@ repositories {
 dependencies {
     implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-rest'
+    implementation 'io.quarkus:quarkus-rest-jackson'
     implementation 'io.quarkus:quarkus-flyway'
     implementation 'io.quarkus:quarkus-container-image-docker'
     implementation 'io.quarkus:quarkus-kotlin'
     implementation 'io.quarkus:quarkus-config-yaml'
-    implementation 'io.quarkus:quarkus-rest-kotlin-serialization'
     implementation 'io.quarkus:quarkus-jdbc-postgresql'
     implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation 'io.quarkus:quarkus-smallrye-health'
     implementation 'io.quarkus:quarkus-arc'
 
-    implementation 'io.swagger:swagger-jaxrs:1.6.15'
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
-    implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
     implementation "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-dao:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-java-time:$exposedVersion"
-    implementation 'org.mapstruct:mapstruct:1.6.3'
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+    kapt "org.mapstruct:mapstruct-processor:$mapstructVersion"
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
@@ -53,8 +55,10 @@ kotlin {
 test {
     systemProperty "java.util.logging.manager", "org.jboss.logmanager.LogManager"
 }
+
 allOpen {
     annotation("jakarta.ws.rs.Path")
+    annotation("kotlinx.serialization.Serializable")
     annotation("jakarta.enterprise.context.ApplicationScoped")
     annotation("jakarta.persistence.Entity")
     annotation("io.quarkus.test.junit.QuarkusTest")
@@ -63,23 +67,26 @@ allOpen {
 openApiGenerate {
     generatorName = 'jaxrs-spec'
     inputSpec = "${rootDir}/src/main/resources/META-INF/openapi.yaml"
-    outputDir = "${buildDir}/generated"
+    outputDir = "${buildDir}/openapi"
     apiPackage = "io.kay.website.api"
     modelPackage = "io.kay.website.api.model"
     configOptions = [
         dateLibrary: "java8",
         library: "quarkus",
-        useMutiny: "true",
-        useJakartaEe: "true"
+        useJakartaEe: "true",
+        interfaceOnly: "true",
+        serializableModel: "true",
+        useSwaggerAnnotations: "false",
     ]
 }
 
+quarkusGenerateDevAppModel.dependsOn('openApiGenerate')
 compileKotlin.dependsOn('openApiGenerate')
 
 sourceSets {
     main {
         java {
-            srcDir "$buildDir/generated/src/gen/java"
+            srcDir "$buildDir/openapi/src/gen/java"
         }
     }
 }

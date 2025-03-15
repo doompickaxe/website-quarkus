@@ -7,27 +7,25 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.transactions.transaction
-import java.util.UUID
+import java.util.*
 import javax.sql.DataSource
 
 @ApplicationScoped
-class PersonRepo(dataSource: DataSource) {
+class PersonRepo(private val dataSource: DataSource) {
 
     private var db: Database = Database.connect(dataSource)
 
     fun getAllPeople(): Iterable<Person> {
-        return transaction {
-            addLogger(Slf4jSqlDebugLogger)
-
-            Person.all()
+        return transaction(db) {
+            Person.all().toList()
         }
     }
 
     fun getPerson(id: UUID): Person? {
-        return transaction {
+        return transaction(db) {
             addLogger(Slf4jSqlDebugLogger)
 
-            Person.find{ PersonTable.uuid eq id }.firstOrNull()
+            Person.find { PersonTable.uuid eq id }.firstOrNull()
         }
     }
 }

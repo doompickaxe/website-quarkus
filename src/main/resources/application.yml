@@ -1,6 +1,18 @@
 quarkus:
+  datasource:
+    db-kind: postgresql
+    devservices:
+      enabled: false
+    username: user
+    password: secret
+    jdbc:
+      url: jdbc:postgresql://localhost:5432/cv
   flyway:
     migrate-at-start: true
+    active: true
+    username: user
+    password: secret
+    jdbc-url: jdbc:postgresql://localhost:5432/cv
 
 mp:
   openapi:
