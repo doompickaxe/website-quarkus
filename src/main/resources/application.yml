@@ -13,6 +13,9 @@ quarkus:
     username: user
     password: secret
     jdbc-url: jdbc:postgresql://localhost:5432/cv
+  http:
+    access-log:
+      enabled: true
 
 mp:
   openapi:

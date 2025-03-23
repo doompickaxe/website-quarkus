@@ -13,7 +13,8 @@ object PersonTable : LongIdTable("person") {
     val birthday = date("birthday")
     val email = text("email")
     val phone = text("phone")
-    val originalFrom = reference("original_from", CityTable.id)
+    val originalFrom = reference("original_from", CityTable)
+    val currentlyIn = optReference("currently_in", CityTable)
 }
 
 class Person(id: EntityID<Long>) : LongEntity(id) {
@@ -25,5 +26,6 @@ class Person(id: EntityID<Long>) : LongEntity(id) {
     var birthday by PersonTable.birthday
     var email by PersonTable.email
     var phone by PersonTable.phone
-    var originalFrom by PersonTable.originalFrom
+    var originalFrom by City referencedOn PersonTable.originalFrom
+    var currentlyLivingIn by City optionalReferencedOn PersonTable.currentlyIn
 }

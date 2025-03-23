@@ -7,7 +7,7 @@ import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import jakarta.inject.Inject
 import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.notNullValue
+import org.hamcrest.CoreMatchers.nullValue
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.AfterEach
@@ -23,30 +23,32 @@ class PersonalResourceTest {
     @Inject
     private lateinit var dataSource: DataSource
 
+    private lateinit var personId: UUID
+
     @BeforeEach
     fun beforeAll() {
         val db = Database.connect(dataSource)
 
         transaction(db) {
-            val countryId = Country.new {
+            val savedCountry = Country.new {
                 name = "Country"
                 code = "CC"
-            }.id
+            }
 
-            val cityId = City.new {
+            val city = City.new {
                 name = "City"
-                country = countryId
-            }.id
+                country = savedCountry
+            }
 
             Person.new {
                 uuid = UUID.randomUUID()
                 firstName = "firstName"
                 lastName = "lastName"
-                birthday = LocalDate.now()
+                birthday = LocalDate.now().minusYears(5)
                 email = "email@example.com"
                 phone = "01234"
-                originalFrom = cityId
-            }
+                originalFrom = city
+            }.let { personId = it.uuid }
         }
     }
 
@@ -62,7 +64,7 @@ class PersonalResourceTest {
     }
 
     @Test
-    fun testHelloEndpoint() {
+    fun getAllPersons() {
         given()
             .`when`()
             .header("Accept", "application/json")
@@ -70,9 +72,44 @@ class PersonalResourceTest {
             .then()
             .statusCode(200)
             .body(
-                "[0].id", notNullValue(),
-                "[0].firstname", equalTo("firstName"),
-                "[0].lastname", equalTo("lastName")
+                "[0].id", equalTo(personId.toString()),
+                "[0].firstName", equalTo("firstName"),
+                "[0].lastName", equalTo("lastName"),
             )
+    }
+
+    @Test
+    fun getOnePerson() {
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/persons/$personId")
+            .then()
+            .statusCode(200)
+            .body(
+                "firstName", equalTo("firstName"),
+                "lastName", equalTo("lastName"),
+                "age", equalTo(5),
+                "email", equalTo("email@example.com"),
+                "phoneNumber", equalTo("01234"),
+                "originalFrom.city", equalTo("City"),
+                "originalFrom.country", equalTo("Country"),
+                "currentlyLivingIn", nullValue(),
+            )
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/persons/unknown")
+            .then()
+            .statusCode(404)
+
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/persons/${UUID.randomUUID()}")
+            .then()
+            .statusCode(404)
     }
 }

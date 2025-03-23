@@ -4,22 +4,14 @@ import io.kay.website.api.model.CareerItem
 import io.kay.website.api.model.EducationItem
 import io.kay.website.api.model.Person
 import io.kay.website.api.model.PersonalInformation
-import io.kay.website.mapper.PersonMapper
-import io.kay.website.repositories.PersonRepo
-import jakarta.inject.Inject
+import io.kay.website.service.PersonService
+import jakarta.ws.rs.NotFoundException
 import java.util.*
 
-class PersonsResource : PersonsApi {
-
-    @Inject
-    private lateinit var personRepo: PersonRepo
-
-    @Inject
-    private lateinit var personMapper: PersonMapper
+class PersonsResource(private val personService: PersonService) : PersonsApi {
 
     override fun getPersons(): List<Person> {
-        return personRepo.getAllPeople()
-            .map { personMapper.toApi(it) }
+        return personService.getAllPeople().toList()
     }
 
     override fun getCareerPath(id: UUID?): MutableList<CareerItem> {
@@ -31,13 +23,10 @@ class PersonsResource : PersonsApi {
     }
 
     override fun getPersonalInformation(id: UUID?): PersonalInformation? {
-        TODO("Not yet implemented")
-//        if (id == null) {
-//            return null
-//        }
-//
-//        return personRepo.getPerson(id)?.let {
-//           personMapper.toApi(it)
-//        }
+        if (id == null) {
+            throw NotFoundException("Person not found")
+        }
+
+        return personService.getPerson(id) ?: throw NotFoundException("Person not found")
     }
 }

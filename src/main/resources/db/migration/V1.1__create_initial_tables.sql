@@ -15,7 +15,7 @@ CREATE TABLE city
 CREATE TABLE person
 (
     id            bigserial primary key,
-    uuid          uuid   not null,
+    uuid          uuid   not null unique,
     first_name    text   not null,
     last_name     text   not null,
     birthday      date   not null,

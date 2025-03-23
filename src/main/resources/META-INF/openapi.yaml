@@ -117,17 +117,17 @@ components:
       type: object
       required:
         - id
-        - firstname
-        - lastname
+        - firstName
+        - lastName
       properties:
         id:
           type: string
           format: uuid
           example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
-        firstname:
+        firstName:
           type: string
           example: John
-        lastname:
+        lastName:
           type: string
           example: Doe
 
