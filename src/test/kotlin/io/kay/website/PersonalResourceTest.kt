@@ -1,8 +1,6 @@
 package io.kay.website
 
-import io.kay.website.domain.City
-import io.kay.website.domain.Country
-import io.kay.website.domain.Person
+import io.kay.website.domain.*
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import jakarta.inject.Inject
@@ -35,20 +33,37 @@ class PersonalResourceTest {
                 code = "CC"
             }
 
-            val city = City.new {
+            val localCity = City.new {
                 name = "City"
                 country = savedCountry
             }
 
-            Person.new {
+            val savedPerson = Person.new {
                 uuid = UUID.randomUUID()
                 firstName = "firstName"
                 lastName = "lastName"
                 birthday = LocalDate.now().minusYears(5)
                 email = "email@example.com"
                 phone = "01234"
-                originalFrom = city
-            }.let { personId = it.uuid }
+                originalFrom = localCity
+            }
+            personId = savedPerson.uuid
+
+            val newCompany = Company.new {
+                name = "test organization"
+                branch = "sofware testing"
+                city = localCity
+                amountOfEmployees = 70
+            }
+
+            Career.new {
+                company = newCompany
+                start = LocalDate.of(2025, 1, 1)
+                jobTitle = "service tester"
+                jobDescription = "testing APIs"
+                tasks = "writing tests, implementing software, refactor"
+                person = savedPerson
+            }
         }
     }
 
@@ -57,6 +72,8 @@ class PersonalResourceTest {
         val db = Database.connect(dataSource)
 
         transaction(db) {
+            Career.all().forEach { it.delete() }
+            Company.all().forEach { it.delete() }
             Person.all().forEach { it.delete() }
             City.all().forEach { it.delete() }
             Country.all().forEach { it.delete() }
@@ -110,5 +127,28 @@ class PersonalResourceTest {
             .get("/api/persons/${UUID.randomUUID()}")
             .then()
             .statusCode(404)
+    }
+
+    @Test
+    fun getCareerOfPerson() {
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/persons/$personId/career")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(1),
+                "[0].company.name", equalTo("test organization"),
+                "[0].company.branch", equalTo("software testing"),
+                "[0].company.city.country", equalTo("country"),
+                "[0].company.city.city", equalTo("city"),
+                "[0].company.amountOfEmployees", equalTo(70),
+                "[0].jobTitle", equalTo("service tester"),
+                "[0].start", equalTo("2025-01-01"),
+                "[0].end", nullValue(),
+                "[0].jobDescription", equalTo("testing APIs"),
+                "[0].tasks", equalTo("writing tests, implementing software, refactor"),
+            )
     }
 }

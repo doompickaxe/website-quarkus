@@ -195,11 +195,16 @@ components:
       required:
         - company
         - start
+        - jobTitle
         - jobDescription
         - tasks
       properties:
         company:
           $ref: '#/components/schemas/Company'
+        jobTitle:
+          type: string
+          example: OpenAPI writer
+          description: Title of the job
         start:
           type: string
           format: date
