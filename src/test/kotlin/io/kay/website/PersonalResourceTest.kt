@@ -104,7 +104,6 @@ class PersonalResourceTest {
             .then()
             .statusCode(404)
 
-
         given()
             .`when`()
             .header("Accept", "application/json")

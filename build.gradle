@@ -1,12 +1,12 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '2.1.10'
-    id 'org.jetbrains.kotlin.plugin.allopen' version '2.1.10'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.1.10'
-    id "org.jetbrains.kotlin.kapt" version '2.1.10'
+    id 'org.jetbrains.kotlin.jvm' version '2.1.20'
+    id 'org.jetbrains.kotlin.plugin.allopen' version '2.1.20'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.1.20'
+    id "org.jetbrains.kotlin.kapt" version '2.1.20'
     id 'io.quarkus'
     id 'java'
     id 'idea'
-    id 'org.openapi.generator' version '7.12.0'
+    id 'org.openapi.generator' version '7.13.0'
 }
 
 repositories {
@@ -71,12 +71,12 @@ openApiGenerate {
     apiPackage = "io.kay.website.api"
     modelPackage = "io.kay.website.api.model"
     configOptions = [
-        dateLibrary: "java8",
-        library: "quarkus",
-        useJakartaEe: "true",
-        interfaceOnly: "true",
-        serializableModel: "true",
-        useSwaggerAnnotations: "false",
+            dateLibrary          : "java8",
+            library              : "quarkus",
+            useJakartaEe         : "true",
+            interfaceOnly        : "true",
+            serializableModel    : "true",
+            useSwaggerAnnotations: "false",
     ]
 }
 
