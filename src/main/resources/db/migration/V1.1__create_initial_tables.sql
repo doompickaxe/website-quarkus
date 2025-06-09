@@ -69,10 +69,12 @@ CREATE TABLE career
 CREATE TABLE education
 (
     id             bigserial primary key,
-    school_name    text not null,
-    start_date     date not null,
+    school_name    text   not null,
+    start_date     date   not null,
     end_date       date,
-    degree         text not null,
-    description    text not null,
-    education_type text not null
+    degree         text   not null,
+    description    text   not null,
+    education_type text   not null,
+    person         bigint not null references person,
+    city           bigint not null references city
 );

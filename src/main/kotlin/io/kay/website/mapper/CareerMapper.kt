@@ -8,7 +8,7 @@ import org.mapstruct.MappingConstants
 @Mapper(componentModel = MappingConstants.ComponentModel.CDI, uses = [PersonMapper::class])
 interface CareerMapper {
 
-    fun toApiCareer(person: Career): CareerItem
+    fun toApiCareer(career: Career): CareerItem
 
     fun toApiCareers(career: Iterable<Career>): Iterable<CareerItem>
 }
