@@ -28,4 +28,6 @@ class Person(id: EntityID<Long>) : LongEntity(id) {
     var phone by PersonTable.phone
     var originalFrom by City referencedOn PersonTable.originalFrom
     var currentlyLivingIn by City optionalReferencedOn PersonTable.currentlyIn
+
+    var languages by Language via PersonLanguageTable
 }

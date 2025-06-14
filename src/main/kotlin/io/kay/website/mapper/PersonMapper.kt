@@ -3,12 +3,14 @@ package io.kay.website.mapper
 import io.kay.website.api.model.Person
 import io.kay.website.api.model.PersonalInformation
 import io.kay.website.domain.City
+import io.kay.website.domain.Language
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.MappingConstants
 import io.kay.website.domain.Person as DomainPerson
 
 @Mapper(componentModel = MappingConstants.ComponentModel.CDI)
+@JvmDefaultWithoutCompatibility
 interface PersonMapper {
 
     @Mapping(target = "id", source = "uuid")
@@ -23,4 +25,6 @@ interface PersonMapper {
     @Mapping(target = "city", source = "name")
     @Mapping(target = "country", source = "country.name")
     fun toApi(city: City): io.kay.website.api.model.City
+
+    fun mapLanguage(language: Language): String = language.name
 }

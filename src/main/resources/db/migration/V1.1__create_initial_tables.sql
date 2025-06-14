@@ -41,7 +41,7 @@ CREATE TABLE languages
 CREATE TABLE person_speaks_language
 (
     id       bigserial primary key,
-    person   bigint not null references person,
+    person   bigint not null references person ON DELETE CASCADE,
     language bigint not null references languages
 );
 

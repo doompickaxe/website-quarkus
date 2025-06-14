@@ -4,9 +4,9 @@ import io.kay.website.domain.*
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import jakarta.inject.Inject
-import org.hamcrest.CoreMatchers.equalTo
-import org.hamcrest.CoreMatchers.nullValue
+import org.hamcrest.CoreMatchers.*
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SizedCollection
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -38,6 +38,10 @@ class PersonalResourceTest {
                 country = savedCountry
             }
 
+            val language = Language.new {
+                name = "English"
+            }
+
             val savedPerson = Person.new {
                 uuid = UUID.randomUUID()
                 firstName = "firstName"
@@ -46,6 +50,7 @@ class PersonalResourceTest {
                 email = "email@example.com"
                 phone = "01234"
                 originalFrom = localCity
+                languages = SizedCollection(language)
             }
             personId = savedPerson.uuid
 
@@ -89,6 +94,7 @@ class PersonalResourceTest {
             Person.all().forEach { it.delete() }
             City.all().forEach { it.delete() }
             Country.all().forEach { it.delete() }
+            Language.all().forEach { it.delete() }
         }
     }
 
@@ -124,6 +130,7 @@ class PersonalResourceTest {
                 "originalFrom.city", equalTo("City"),
                 "originalFrom.country", equalTo("Country"),
                 "currentlyLivingIn", nullValue(),
+                "languages", hasItem("English"),
             )
 
         given()
