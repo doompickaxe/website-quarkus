@@ -27,9 +27,15 @@ CREATE TABLE person
 
 CREATE TABLE interests
 (
-    id     bigserial primary key,
-    name   text   not null,
-    person bigint not null references person
+    id   bigserial primary key,
+    name text not null
+);
+
+CREATE TABLE person_has_interests
+(
+    person    bigint not null references person ON DELETE CASCADE,
+    interests bigint not null references interests,
+    primary key (person, interests)
 );
 
 CREATE TABLE languages
@@ -40,9 +46,9 @@ CREATE TABLE languages
 
 CREATE TABLE person_speaks_language
 (
-    id       bigserial primary key,
     person   bigint not null references person ON DELETE CASCADE,
-    language bigint not null references languages
+    language bigint not null references languages,
+    primary key (person, language)
 );
 
 CREATE TABLE company

@@ -3,6 +3,7 @@ package io.kay.website.mapper
 import io.kay.website.api.model.Person
 import io.kay.website.api.model.PersonalInformation
 import io.kay.website.domain.City
+import io.kay.website.domain.Interests
 import io.kay.website.domain.Language
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
@@ -27,4 +28,6 @@ interface PersonMapper {
     fun toApi(city: City): io.kay.website.api.model.City
 
     fun mapLanguage(language: Language): String = language.name
+
+    fun mapInterests(interests: Interests): String = interests.name
 }

@@ -42,6 +42,13 @@ class PersonalResourceTest {
                 name = "English"
             }
 
+            val codingInterest = Interests.new {
+                name = "Coding"
+            }
+            val cookingInterest = Interests.new {
+                name = "Cooking"
+            }
+
             val savedPerson = Person.new {
                 uuid = UUID.randomUUID()
                 firstName = "firstName"
@@ -51,6 +58,7 @@ class PersonalResourceTest {
                 phone = "01234"
                 originalFrom = localCity
                 languages = SizedCollection(language)
+                interests = SizedCollection(codingInterest, cookingInterest)
             }
             personId = savedPerson.uuid
 
@@ -95,6 +103,7 @@ class PersonalResourceTest {
             City.all().forEach { it.delete() }
             Country.all().forEach { it.delete() }
             Language.all().forEach { it.delete() }
+            Interests.all().forEach { it.delete() }
         }
     }
 
@@ -131,6 +140,7 @@ class PersonalResourceTest {
                 "originalFrom.country", equalTo("Country"),
                 "currentlyLivingIn", nullValue(),
                 "languages", hasItem("English"),
+                "interests", hasItems("Coding", "Cooking"),
             )
 
         given()

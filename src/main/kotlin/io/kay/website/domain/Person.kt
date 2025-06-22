@@ -30,4 +30,5 @@ class Person(id: EntityID<Long>) : LongEntity(id) {
     var currentlyLivingIn by City optionalReferencedOn PersonTable.currentlyIn
 
     var languages by Language via PersonLanguageTable
+    var interests by Interests via PersonInterestsTable
 }
