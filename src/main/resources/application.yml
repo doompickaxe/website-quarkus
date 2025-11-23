@@ -1,15 +1,13 @@
 quarkus:
-  devservices:
-    enabled: true
   datasource:
     devservices:
       port: 5432
       enabled: true
     db-kind: postgresql
-    username: quarkus
-    password: quarkus
+    username: ${POSTGRES_USER:quarkus}
+    password: ${POSTGRES_USER_SECRET:quarkus}
     jdbc:
-      url: jdbc:postgresql://localhost:5432/quarkus
+      url: ${POSTGRES_JDBC_URL:jdbc:postgresql://localhost:5432/quarkus}
   flyway:
     migrate-at-start: true
     active: true
@@ -19,6 +17,16 @@ quarkus:
   http:
     access-log:
       enabled: true
+    root-path: /api
+  container-image:
+    build: true
+    name: website
+  native:
+    additional-build-args: "--initialize-at-build-time=org.jetbrains.exposed.sql\\,org.jetbrains.exposed.jdbc\\,org.jetbrains.exposed.sql.transactions"
+  analytics:
+    disabled: true
+  banner:
+    enabled: false
 
 mp:
   openapi:
@@ -28,3 +36,15 @@ mp:
 testcontainers:
   reuse:
     enable: true
+
+"%prod":
+  quarkus:
+    devservices:
+      enabled: false
+    datasource:
+      devservices:
+        port: 5432
+        enabled: false
+  testcontainers:
+    reuse:
+      enable: false

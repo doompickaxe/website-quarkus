@@ -6,7 +6,7 @@ plugins {
     id 'io.quarkus'
     id 'java'
     id 'idea'
-    id 'org.openapi.generator' version '7.13.0'
+    id 'org.openapi.generator' version '7.17.0'
 }
 
 repositories {
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation enforcedPlatform("${quarkusPlatformGroupId}:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation enforcedPlatform("io.quarkus:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-rest'
     implementation 'io.quarkus:quarkus-rest-jackson'
     implementation 'io.quarkus:quarkus-flyway'
@@ -25,7 +25,7 @@ dependencies {
     implementation 'io.quarkus:quarkus-smallrye-openapi'
     implementation 'io.quarkus:quarkus-smallrye-health'
     implementation 'io.quarkus:quarkus-arc'
-    implementation 'io.quarkus:quarkus-container-image-jib'
+    implementation 'io.quarkus:quarkus-container-image-docker'
 
     implementation 'jakarta.validation:jakarta.validation-api:3.1.1'
     implementation "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
@@ -86,6 +86,12 @@ openApiGenerate {
 
 quarkusGenerateDevAppModel.dependsOn('openApiGenerate')
 compileKotlin.dependsOn('openApiGenerate')
+
+import org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask
+
+tasks.withType(KaptGenerateStubsTask).configureEach {
+    dependsOn 'openApiGenerate'
+}
 
 sourceSets {
     main {
