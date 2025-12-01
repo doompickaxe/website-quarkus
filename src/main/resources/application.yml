@@ -17,7 +17,6 @@ quarkus:
   http:
     access-log:
       enabled: true
-    root-path: /api
   container-image:
     build: true
     name: website
@@ -27,6 +26,17 @@ quarkus:
     disabled: true
   banner:
     enabled: false
+  swagger-ui:
+    urls:
+      HOME: /openapi.yaml
+    path: /index.html
+    always-include: true
+    title: Explore CVs
+    try-it-out-enabled: true
+  smallrye-openapi:
+    path: /openapi.yaml
+    management:
+      enabled: false
 
 mp:
   openapi:

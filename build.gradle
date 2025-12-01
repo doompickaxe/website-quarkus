@@ -70,7 +70,7 @@ allOpen {
 
 openApiGenerate {
     generatorName = 'jaxrs-spec'
-    inputSpec = "${rootDir}/src/main/resources/META-INF/resources/openapi.yaml"
+    inputSpec = "${rootDir}/src/main/resources/META-INF/openapi.yaml"
     outputDir = "${buildDir}/openapi"
     apiPackage = "io.kay.website.api"
     modelPackage = "io.kay.website.api.model"

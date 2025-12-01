@@ -3,11 +3,13 @@ info:
   title: CV
   description: |-
     This is the API to retrieve information about me and my career so far.
+    The repository can be found at <a href="https://github.com/doompickaxe/website-quarkus">GitHub</a> which reveals the code of this application.
   contact:
     email: kwatzal@gmail.com
   version: 1.0.0
 servers:
-  - url: http://localhost:8080/api
+  - url: https://www.kevinwatzal.de
+  - url: http://localhost:8080
 tags:
   - name: persons
     description: Information about people
@@ -16,7 +18,7 @@ tags:
   - name: education
     description: Schools and universities that have been attended
 paths:
-  /persons:
+  /api/persons:
     get:
       tags:
         - persons
@@ -32,7 +34,7 @@ paths:
         '500':
           description: An unexpected error has occurred
 
-  /persons/{id}:
+  /api/persons/{id}:
     get:
       tags:
         - persons
@@ -58,7 +60,7 @@ paths:
         '500':
           description: An unexpected error has occurred
 
-  /persons/{id}/career:
+  /api/persons/{id}/career:
     get:
       tags:
         - career
@@ -82,7 +84,7 @@ paths:
         '500':
           description: An unexpected error has occurred
 
-  /persons/{id}/education:
+  /api/persons/{id}/education:
     get:
       tags:
         - education

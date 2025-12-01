@@ -14,7 +14,7 @@ class PersonsResource(
     private val personService: PersonService,
     private val careerService: CareerService,
     private val educationService: EducationService
-) : PersonsApi {
+) : ApiApi {
 
     override fun getPersons(): List<Person> {
         return personService.getAllPeople().toList()
@@ -24,7 +24,7 @@ class PersonsResource(
         if (id == null) {
             throw NotFoundException("Person not found")
         }
-        
+
         return careerService.getCareerOfPerson(id).toList()
     }
 
