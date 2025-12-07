@@ -3,7 +3,7 @@ services:
     image: postgres:latest
     shm_size: 128mb
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       POSTGRES_USER: quarkus
       POSTGRES_PASSWORD: quarkus
