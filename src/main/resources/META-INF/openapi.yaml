@@ -47,7 +47,7 @@ paths:
           schema:
             type: string
             format: uuid
-            example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
+            example: 'a6f0c66e-ad09-4139-9845-8e8bb4e1a9a5'
       responses:
         '200':
           description: Retrieved personal information
@@ -73,7 +73,7 @@ paths:
           schema:
             type: string
             format: uuid
-            example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
+            example: 'a6f0c66e-ad09-4139-9845-8e8bb4e1a9a5'
       responses:
         '200':
           description: Career path until today
@@ -97,7 +97,7 @@ paths:
           schema:
             type: string
             format: uuid
-            example: 'be1ec2eb-ee17-421d-a221-5b537d8a242a'
+            example: 'a6f0c66e-ad09-4139-9845-8e8bb4e1a9a5'
       responses:
         '200':
           description: Schools and universities I've attended
