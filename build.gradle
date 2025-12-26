@@ -6,7 +6,7 @@ plugins {
     id 'io.quarkus'
     id 'java'
     id 'idea'
-    id 'org.openapi.generator' version '7.17.0'
+    id 'org.openapi.generator' version '7.18.0'
 }
 
 repositories {
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation enforcedPlatform("io.quarkus:${quarkusPlatformArtifactId}:${quarkusPlatformVersion}")
+    implementation enforcedPlatform("io.quarkus:quarkus-bom:${quarkusPlatformVersion}")
     implementation 'io.quarkus:quarkus-rest'
     implementation 'io.quarkus:quarkus-rest-jackson'
     implementation 'io.quarkus:quarkus-flyway'
@@ -31,6 +31,8 @@ dependencies {
     implementation "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-dao:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-java-time:$exposedVersion"
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
+
     implementation "org.mapstruct:mapstruct:$mapstructVersion"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
     kapt "org.mapstruct:mapstruct-processor:$mapstructVersion"
