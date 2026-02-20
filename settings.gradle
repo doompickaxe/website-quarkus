@@ -4,9 +4,6 @@ pluginManagement {
         gradlePluginPortal()
         mavenLocal()
     }
-    plugins {
-        id "io.quarkus" version "${quarkusPlatformVersion}"
-    }
 }
 
 rootProject.name = 'website-quarkus'

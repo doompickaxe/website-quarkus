@@ -1,12 +1,13 @@
 plugins {
+    id "io.quarkus" version "${quarkusPlatformVersion}"
     id 'org.jetbrains.kotlin.jvm' version "${kotlinVersion}"
     id 'org.jetbrains.kotlin.plugin.allopen' version "${kotlinVersion}"
     id 'org.jetbrains.kotlin.plugin.serialization' version "${kotlinVersion}"
     id "org.jetbrains.kotlin.kapt" version "${kotlinVersion}"
-    id 'io.quarkus'
+    id 'org.openapi.generator' version '7.20.0'
     id 'java'
     id 'idea'
-    id 'org.openapi.generator' version '7.18.0'
+    id 'application'
 }
 
 repositories {
@@ -31,11 +32,13 @@ dependencies {
     implementation "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-dao:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-java-time:$exposedVersion"
-    implementation 'org.openapitools:jackson-databind-nullable:0.2.8'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.9'
 
     implementation "org.mapstruct:mapstruct:$mapstructVersion"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
     kapt "org.mapstruct:mapstruct-processor:$mapstructVersion"
+
+    implementation 'org.jetbrains.kotlin:kotlin-stdlib'
 
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
@@ -46,13 +49,11 @@ version '1.0.0-SNAPSHOT'
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
 kotlin {
-    jvmToolchain(21)
-
     compilerOptions {
         freeCompilerArgs = ['-Xjvm-default=all-compatibility']
     }

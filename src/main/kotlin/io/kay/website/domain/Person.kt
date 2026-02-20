@@ -1,13 +1,14 @@
 package io.kay.website.domain
 
-import org.jetbrains.exposed.dao.LongEntity
-import org.jetbrains.exposed.dao.LongEntityClass
-import org.jetbrains.exposed.dao.id.EntityID
-import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.javatime.date
+import org.jetbrains.exposed.v1.core.dao.id.EntityID
+import org.jetbrains.exposed.v1.core.dao.id.LongIdTable
+import org.jetbrains.exposed.v1.core.java.javaUUID
+import org.jetbrains.exposed.v1.dao.LongEntity
+import org.jetbrains.exposed.v1.dao.LongEntityClass
+import org.jetbrains.exposed.v1.javatime.date
 
 object PersonTable : LongIdTable("person") {
-    val uuid = uuid("uuid").autoGenerate().uniqueIndex()
+    val uuid = javaUUID("uuid").autoGenerate().uniqueIndex()
     val firstName = text("first_name")
     val lastName = text("last_name")
     val birthday = date("birthday")

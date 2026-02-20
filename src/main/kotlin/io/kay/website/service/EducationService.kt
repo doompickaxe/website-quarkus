@@ -4,7 +4,7 @@ import io.kay.website.api.model.EducationItem
 import io.kay.website.mapper.EducationMapper
 import io.kay.website.repositories.EducationRepo
 import jakarta.enterprise.context.ApplicationScoped
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
 
 @ApplicationScoped

@@ -4,7 +4,7 @@ import io.kay.website.api.model.CareerItem
 import io.kay.website.mapper.CareerMapper
 import io.kay.website.repositories.CareerRepo
 import jakarta.enterprise.context.ApplicationScoped
-import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
 
 @ApplicationScoped
