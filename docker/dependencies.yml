@@ -8,3 +8,28 @@ services:
       POSTGRES_USER: quarkus
       POSTGRES_PASSWORD: quarkus
       POSTGRES_DB: quarkus
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 10s
+      retries: 60
+      start_period: 2s
+      timeout: 10s
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/opt/keycloak/data/import/realm-config.json
+      - KC_HEALTH_ENABLED=true
+    ports:
+      - 8000:8080
+    volumes:
+      - ../src/main/resources/keycloak/quarkus-realm.json:/opt/keycloak/data/import/realm-config.json
+    command: [ "start-dev", "--hostname", "http://keycloak:8080", "--import-realm" ]
+    healthcheck:
+      test: [ 'CMD-SHELL', "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000" ]
+      start_period: 2s
+      interval: 10s
+      retries: 120
+      timeout: 10s

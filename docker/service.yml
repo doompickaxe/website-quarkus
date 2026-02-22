@@ -1,7 +1,13 @@
 services:
   app:
-    image: kay/website:1.0.0-SNAPSHOT
+    image: docker.io/kev/website:1.0.0-SNAPSHOT
     ports:
       - "8080:8080"
     environment:
       POSTGRES_JDBC_URL: jdbc:postgresql://db:5432/quarkus
+      KEYCLOAK_URL: http://keycloak:8080/realms/quarkus
+    depends_on:
+      db:
+        condition: service_healthy
+      keycloak:
+        condition: service_healthy

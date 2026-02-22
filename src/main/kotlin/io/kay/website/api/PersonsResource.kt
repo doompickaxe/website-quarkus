@@ -8,6 +8,7 @@ import io.kay.website.service.CareerService
 import io.kay.website.service.EducationService
 import io.kay.website.service.PersonService
 import jakarta.ws.rs.NotFoundException
+import org.slf4j.LoggerFactory
 import java.util.*
 
 class PersonsResource(
@@ -18,6 +19,10 @@ class PersonsResource(
 
     override fun getPersons(): List<Person> {
         return personService.getAllPeople().toList()
+    }
+
+    override fun apiAdminHelloGet() {
+        LOGGER.info("hello was called")
     }
 
     override fun getCareerPath(id: UUID?): List<CareerItem> {
@@ -42,5 +47,9 @@ class PersonsResource(
         }
 
         return personService.getPerson(id) ?: throw NotFoundException("Person not found")
+    }
+
+    companion object {
+        val LOGGER = LoggerFactory.getLogger(PersonsResource::class.java)
     }
 }

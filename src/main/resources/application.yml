@@ -17,11 +17,21 @@ quarkus:
   http:
     access-log:
       enabled: true
+    auth:
+      permission:
+        openapi:
+          paths: /openapi.yaml,/,/index.html,/swagger-ui.css,/theme-feeling-blue.css,/style.css,/swagger-ui-bundle.js,/swagger-ui-standalone-preset.js,/favicon.ico,/logo.png
+          methods: GET,HEAD
+          policy: permit
+        api:
+          paths: /api/*
+          policy: permit
+        authenticated:
+          paths: /api/admin/*
+          policy: authenticated
   container-image:
     build: true
     name: website
-  native:
-    additional-build-args: "--initialize-at-build-time=org.jetbrains.exposed.sql\\,org.jetbrains.exposed.jdbc\\,org.jetbrains.exposed.sql.transactions"
   analytics:
     disabled: true
   banner:
@@ -37,6 +47,9 @@ quarkus:
     path: /openapi.yaml
     management:
       enabled: false
+  keycloak:
+    devservices:
+      realm-path: keycloak/quarkus-realm.json
 
 mp:
   openapi:
@@ -53,8 +66,10 @@ testcontainers:
       enabled: false
     datasource:
       devservices:
-        port: 5432
         enabled: false
+    oidc:
+      auth-server-url: ${KEYCLOAK_URL:http://localhost:8000}
   testcontainers:
     reuse:
       enable: false
+

@@ -1,12 +1,12 @@
 openapi: 3.0.3
 info:
-  title: CV
+  title: CV of Kevin Watzal
   description: |-
-    This is the API to retrieve information about me and my career so far.
-    The repository can be found at <a href="https://github.com/doompickaxe/website-quarkus">GitHub</a> which reveals the code of this application.
+    This is an API to retrieve information about me and my career so far.
+    The repository can be found at [GitHub](https://github.com/doompickaxe/website-quarkus) which reveals the code of this application.
   contact:
     email: kwatzal@gmail.com
-  version: 1.0.0
+  version: 1.0.1
 servers:
   - url: https://www.kevinwatzal.de
   - url: http://localhost:8080
@@ -107,6 +107,18 @@ paths:
                 $ref: '#/components/schemas/EducationPath'
         '500':
           description: An unexpected error has occurred
+
+  /api/admin/hello:
+    get:
+      tags:
+        - admin
+      security:
+        - bearerAuth: [ ]
+      responses:
+        204:
+          description: Indicates successful authenticated ping
+        401:
+          description: Unauthenticated request
 
 components:
   schemas:
@@ -288,3 +300,9 @@ components:
             - SECONDARY_SCHOOL
             - COLLEGE
             - UNIVERSITY
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
