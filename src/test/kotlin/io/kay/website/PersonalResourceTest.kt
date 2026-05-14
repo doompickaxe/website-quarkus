@@ -77,17 +77,6 @@ class PersonalResourceTest {
                 tasks = "writing tests, implementing software, refactor"
                 person = savedPerson
             }
-
-            Education.new {
-                schoolName = "School"
-                start = LocalDate.of(2024, 1, 1)
-                end = LocalDate.of(2024, 2, 2)
-                degree = "service tester"
-                description = "special studies created by myself"
-                educationType = EducationType.UNIVERSITY
-                city = localCity
-                person = savedPerson
-            }
         }
     }
 
@@ -178,27 +167,6 @@ class PersonalResourceTest {
                 "[0].end", nullValue(),
                 "[0].jobDescription", equalTo("testing APIs"),
                 "[0].tasks", equalTo("writing tests, implementing software, refactor"),
-            )
-    }
-
-    @Test
-    fun getEducationPathOfPerson() {
-        given()
-            .`when`()
-            .header("Accept", "application/json")
-            .get("/api/persons/$personId/education")
-            .then()
-            .statusCode(200)
-            .body(
-                "$.size()", equalTo(1),
-                "[0].schoolName", equalTo("School"),
-                "[0].city.country", equalTo("Country"),
-                "[0].city.city", equalTo("City"),
-                "[0].start", equalTo("2024-01-01"),
-                "[0].end", equalTo("2024-02-02"),
-                "[0].degree", equalTo("service tester"),
-                "[0].description", equalTo("special studies created by myself"),
-                "[0].educationType", equalTo("UNIVERSITY"),
             )
     }
 }

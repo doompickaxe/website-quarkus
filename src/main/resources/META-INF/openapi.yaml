@@ -1,4 +1,4 @@
-openapi: 3.0.3
+openapi: 3.0.4
 info:
   title: CV of Kevin Watzal
   description: |-
@@ -6,7 +6,7 @@ info:
     The repository can be found at [GitHub](https://github.com/doompickaxe/website-quarkus) which reveals the code of this application.
   contact:
     email: kwatzal@gmail.com
-  version: 1.0.1
+  version: 1.0.2
 servers:
   - url: https://www.kevinwatzal.de
   - url: http://localhost:8080
@@ -105,20 +105,43 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EducationPath'
+        '404':
+          description: Person not found
         '500':
           description: An unexpected error has occurred
-
-  /api/admin/hello:
-    get:
+    put:
       tags:
-        - admin
+        - education
       security:
         - bearerAuth: [ ]
+      description: Update personal education
+      operationId: updateEducationPath
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 'a6f0c66e-ad09-4139-9845-8e8bb4e1a9a5'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EducationPath'
       responses:
-        204:
-          description: Indicates successful authenticated ping
-        401:
-          description: Unauthenticated request
+        '200':
+          description: Schools and universities I've attended
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EducationPath'
+        '401':
+          description: Unauthorized request
+        '404':
+          description: Person or education not found
+        '500':
+          description: An unexpected error has occurred
 
 components:
   schemas:

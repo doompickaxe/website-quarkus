@@ -4,7 +4,7 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.allopen' version "${kotlinVersion}"
     id 'org.jetbrains.kotlin.plugin.serialization' version "${kotlinVersion}"
     id "org.jetbrains.kotlin.kapt" version "${kotlinVersion}"
-    id 'org.openapi.generator' version '7.20.0'
+    id 'org.openapi.generator' version '7.22.0'
     id 'java'
     id 'idea'
     id 'application'
@@ -33,7 +33,7 @@ dependencies {
     implementation "org.jetbrains.exposed:exposed-jdbc:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-dao:$exposedVersion"
     implementation "org.jetbrains.exposed:exposed-java-time:$exposedVersion"
-    implementation 'org.openapitools:jackson-databind-nullable:0.2.9'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.10'
 
     implementation "org.mapstruct:mapstruct:$mapstructVersion"
     annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
@@ -45,8 +45,8 @@ dependencies {
     testImplementation 'io.rest-assured:rest-assured'
 }
 
-group 'io.kay'
-version '1.0.0-SNAPSHOT'
+group = 'io.kay'
+version = '1.0.0-SNAPSHOT'
 
 java {
     toolchain {
@@ -95,6 +95,7 @@ import org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask
 
 tasks.withType(KaptGenerateStubsTask).configureEach {
     dependsOn 'openApiGenerate'
+    mustRunAfter 'quarkusGenerateCodeDev'
 }
 
 sourceSets {

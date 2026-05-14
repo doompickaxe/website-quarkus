@@ -25,9 +25,11 @@ quarkus:
           policy: permit
         api:
           paths: /api/*
+          methods: GET,HEAD,OPTIONS
           policy: permit
         authenticated:
-          paths: /api/admin/*
+          paths: /api/*
+          methods: POST,PUT,DELETE
           policy: authenticated
   container-image:
     build: true
@@ -50,6 +52,10 @@ quarkus:
   keycloak:
     devservices:
       realm-path: keycloak/quarkus-realm.json
+  info:
+    enabled: false
+  log:
+    level: DEBUG
 
 mp:
   openapi:

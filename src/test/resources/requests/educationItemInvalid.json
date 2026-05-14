@@ -1,0 +1,14 @@
+[
+  {
+    "schoolName": "Making people smart",
+    "city": {
+      "country": "CC",
+      "city": "C"
+    },
+    "start": "2000-01-01",
+    "end": "1990-01-01",
+    "degree": "Bachelor of Science",
+    "description": "string",
+    "educationType": "ELEMENTARY_SCHOOL"
+  }
+]

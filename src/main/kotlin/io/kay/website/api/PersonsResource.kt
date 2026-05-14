@@ -21,8 +21,8 @@ class PersonsResource(
         return personService.getAllPeople().toList()
     }
 
-    override fun apiAdminHelloGet() {
-        LOGGER.info("hello was called")
+    override fun updateEducationPath(id: UUID, educationItems: List<EducationItem>): List<EducationItem> {
+        return educationService.updateEducationPath(id, educationItems)
     }
 
     override fun getCareerPath(id: UUID?): List<CareerItem> {

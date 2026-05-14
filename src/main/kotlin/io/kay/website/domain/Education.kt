@@ -12,7 +12,7 @@ object EducationTable : LongIdTable("education") {
     val end = date("end_date").nullable()
     val degree = text("degree")
     val description = text("description")
-    val educationType = enumerationByName<EducationType>("education_type", 15)
+    val educationType = enumerationByName<EducationType>("education_type", length = 20)
     val person = reference("person", PersonTable)
     val city = reference("city", CityTable)
 }
