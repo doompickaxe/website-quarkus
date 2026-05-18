@@ -2,6 +2,7 @@ package io.kay.website
 
 import io.kay.website.domain.*
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.keycloak.client.KeycloakTestClient
 import io.restassured.RestAssured.given
 import jakarta.inject.Inject
 import org.hamcrest.CoreMatchers.equalTo
@@ -24,6 +25,7 @@ class EducationItemsTest {
     private lateinit var dataSource: DataSource
 
     private lateinit var personId: UUID
+    private val keycloakClient = KeycloakTestClient()
 
     @BeforeEach
     fun beforeAll() {
@@ -129,6 +131,7 @@ class EducationItemsTest {
             .`when`()
             .header("Accept", "application/json")
             .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
             .body(File(javaClass.getResource("/requests/educationItems.json").file))
             .put("/api/persons/${UUID.randomUUID()}/education")
             .then()
@@ -139,6 +142,7 @@ class EducationItemsTest {
             .`when`()
             .header("Accept", "application/json")
             .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
             .body(File(javaClass.getResource("/requests/educationItems.json").file))
             .put("/api/persons/$personId/education")
             .then()
@@ -171,10 +175,12 @@ class EducationItemsTest {
             .`when`()
             .header("Accept", "application/json")
             .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
             .body(File(javaClass.getResource("/requests/educationItemInvalid.json").file))
             .put("/api/persons/$personId/education")
             .then()
             .statusCode(400)
+            .body("message", equalTo("Education items end is before start"))
             .log().everything()
     }
 }
