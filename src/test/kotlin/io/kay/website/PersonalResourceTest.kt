@@ -7,6 +7,7 @@ import jakarta.inject.Inject
 import org.hamcrest.CoreMatchers.*
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SizedCollection
+import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -83,16 +84,19 @@ class PersonalResourceTest {
     @AfterEach
     fun afterAll() {
         val db = Database.connect(dataSource)
-
         transaction(db) {
-            Education.all().forEach { it.delete() }
-            Career.all().forEach { it.delete() }
-            Company.all().forEach { it.delete() }
-            Person.all().forEach { it.delete() }
-            City.all().forEach { it.delete() }
-            Country.all().forEach { it.delete() }
-            Language.all().forEach { it.delete() }
-            Interests.all().forEach { it.delete() }
+            listOf(
+                EducationTable,
+                CareerTable,
+                CompanyTable,
+                PersonTable,
+                CityTable,
+                CountryTable,
+                LanguageTable,
+                InterestsTable
+            ).forEach {
+                it.deleteAll()
+            }
         }
     }
 

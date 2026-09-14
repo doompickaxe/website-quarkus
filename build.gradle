@@ -57,7 +57,7 @@ java {
 
 kotlin {
     compilerOptions {
-        freeCompilerArgs = ['-Xjvm-default=all-compatibility']
+        freeCompilerArgs = ['-jvm-default=enable']
     }
 }
 

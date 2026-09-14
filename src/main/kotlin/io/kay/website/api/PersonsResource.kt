@@ -21,10 +21,6 @@ class PersonsResource(
         return personService.getAllPeople().toList()
     }
 
-    override fun updateEducationPath(id: UUID, educationItems: List<EducationItem>): List<EducationItem> {
-        return educationService.updateEducationPath(id, educationItems)
-    }
-
     override fun getCareerPath(id: UUID?): List<CareerItem> {
         if (id == null) {
             throw NotFoundException("Person not found")
@@ -33,12 +29,20 @@ class PersonsResource(
         return careerService.getCareerOfPerson(id).toList()
     }
 
+    override fun updateCareerPath(id: UUID, careerItems: List<CareerItem>): List<CareerItem> {
+        return careerService.updateCareerPath(id, careerItems)
+    }
+
     override fun getEducationPath(id: UUID?): List<EducationItem> {
         if (id == null) {
             throw NotFoundException("Person not found")
         }
 
         return educationService.getEducationOfPerson(id).toList()
+    }
+
+    override fun updateEducationPath(id: UUID, educationItems: List<EducationItem>): List<EducationItem> {
+        return educationService.updateEducationPath(id, educationItems)
     }
 
     override fun getPersonalInformation(id: UUID?): PersonalInformation {

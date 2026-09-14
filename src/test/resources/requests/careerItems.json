@@ -1,0 +1,33 @@
+[
+  {
+    "company": {
+      "name": "test organization",
+      "branch": "software testing",
+      "city": {
+        "country": "Country",
+        "city": "City"
+      },
+      "amountOfEmployees": 70
+    },
+    "jobTitle": "OpenAPI writer",
+    "start": "2000-10-01",
+    "end": "2010-09-01",
+    "jobDescription": "Backend Developer",
+    "tasks": "Writing OpenAPI specifications"
+  },
+  {
+    "company": {
+      "name": "test organization",
+      "branch": "software testing",
+      "city": {
+        "country": "Country",
+        "city": "City"
+      },
+      "amountOfEmployees": 70
+    },
+    "jobTitle": "OpenAPI writer",
+    "start": "2011-01-01",
+    "jobDescription": "Better Backend Developer",
+    "tasks": "Writing more OpenAPI specifications"
+  }
+]

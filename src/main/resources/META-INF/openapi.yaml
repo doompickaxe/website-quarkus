@@ -9,6 +9,7 @@ info:
   version: 1.0.2
 servers:
   - url: https://www.kevinwatzal.de
+  - url: https://kevinwatzal.de
   - url: http://localhost:8080
 tags:
   - name: persons
@@ -83,6 +84,39 @@ paths:
                 $ref: '#/components/schemas/CareerPath'
         '500':
           description: An unexpected error has occurred
+    put:
+      tags:
+        - career
+      security:
+        - bearerAuth: [ ]
+      description: Update career path
+      operationId: updateCareerPath
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 'a6f0c66e-ad09-4139-9845-8e8bb4e1a9a5'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CareerPath'
+      responses:
+        '200':
+          description: Where I worked so far
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CareerPath'
+        '401':
+          description: Unauthorized request
+        '404':
+          description: Person, company, city or company of career path not found
+        '500':
+          description: An unexpected error has occurred
 
   /api/persons/{id}/education:
     get:
@@ -139,7 +173,7 @@ paths:
         '401':
           description: Unauthorized request
         '404':
-          description: Person or education not found
+          description: Person, city or country of education not found
         '500':
           description: An unexpected error has occurred
 

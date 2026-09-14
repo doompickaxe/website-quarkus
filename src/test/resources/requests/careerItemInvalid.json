@@ -1,0 +1,33 @@
+[
+  {
+    "company": {
+      "name": "Cool testing company",
+      "branch": "Testing",
+      "city": {
+        "country": "Country",
+        "city": "City"
+      },
+      "amountOfEmployees": 10
+    },
+    "jobTitle": "OpenAPI writer",
+    "start": "2010-01-01",
+    "end": "2008-12-31",
+    "jobDescription": "Backend Developer",
+    "tasks": "Writing OpenAPI specifications"
+  },
+  {
+    "company": {
+      "name": "Very cool testing company",
+      "branch": "Writing",
+      "city": {
+        "country": "Country",
+        "city": "City"
+      },
+      "amountOfEmployees": 10
+    },
+    "jobTitle": "OpenAPI writer",
+    "start": "1970-01-19",
+    "jobDescription": "Better Backend Developer",
+    "tasks": "Writing more OpenAPI specifications"
+  }
+]
