@@ -10,7 +10,7 @@ info:
 servers:
   - url: https://www.kevinwatzal.de
   - url: https://kevinwatzal.de
-  - url: http://localhost:8080
+  - url: http://localhost:8 080
 tags:
   - name: persons
     description: Information about people
@@ -18,6 +18,8 @@ tags:
     description: Previous career path
   - name: education
     description: Schools and universities that have been attended
+  - name: companies
+    description: Companies where people have worked
 paths:
   /api/persons:
     get:
@@ -174,6 +176,33 @@ paths:
           description: Unauthorized request
         '404':
           description: Person, city or country of education not found
+        '500':
+          description: An unexpected error has occurred
+
+  /api/companies:
+    post:
+      tags:
+        - companies
+      security:
+        - bearerAuth: [ ]
+      description: Create a company
+      operationId: createCompany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+      responses:
+        '201':
+          description: Company created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '400':
+          description: Company with same name already exists
+        '401':
+          description: Unauthorized request
         '500':
           description: An unexpected error has occurred
 

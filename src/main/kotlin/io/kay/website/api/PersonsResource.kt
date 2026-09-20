@@ -1,48 +1,17 @@
 package io.kay.website.api
 
-import io.kay.website.api.model.CareerItem
-import io.kay.website.api.model.EducationItem
 import io.kay.website.api.model.Person
 import io.kay.website.api.model.PersonalInformation
-import io.kay.website.service.CareerService
-import io.kay.website.service.EducationService
 import io.kay.website.service.PersonService
 import jakarta.ws.rs.NotFoundException
-import org.slf4j.LoggerFactory
 import java.util.*
 
 class PersonsResource(
     private val personService: PersonService,
-    private val careerService: CareerService,
-    private val educationService: EducationService
-) : ApiApi {
+) : PersonsApi {
 
     override fun getPersons(): List<Person> {
         return personService.getAllPeople().toList()
-    }
-
-    override fun getCareerPath(id: UUID?): List<CareerItem> {
-        if (id == null) {
-            throw NotFoundException("Person not found")
-        }
-
-        return careerService.getCareerOfPerson(id).toList()
-    }
-
-    override fun updateCareerPath(id: UUID, careerItems: List<CareerItem>): List<CareerItem> {
-        return careerService.updateCareerPath(id, careerItems)
-    }
-
-    override fun getEducationPath(id: UUID?): List<EducationItem> {
-        if (id == null) {
-            throw NotFoundException("Person not found")
-        }
-
-        return educationService.getEducationOfPerson(id).toList()
-    }
-
-    override fun updateEducationPath(id: UUID, educationItems: List<EducationItem>): List<EducationItem> {
-        return educationService.updateEducationPath(id, educationItems)
     }
 
     override fun getPersonalInformation(id: UUID?): PersonalInformation {
@@ -51,9 +20,5 @@ class PersonsResource(
         }
 
         return personService.getPerson(id) ?: throw NotFoundException("Person not found")
-    }
-
-    companion object {
-        val LOGGER = LoggerFactory.getLogger(PersonsResource::class.java)
     }
 }

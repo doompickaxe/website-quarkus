@@ -73,9 +73,11 @@ allOpen {
     annotation("io.quarkus.test.junit.QuarkusTest")
 }
 
+def inputSpecFile = "${rootDir}/src/main/resources/META-INF/openapi.yaml"
+
 openApiGenerate {
     generatorName = 'jaxrs-spec'
-    inputSpec = "${rootDir}/src/main/resources/META-INF/openapi.yaml"
+    inputSpec = "$inputSpecFile"
     outputDir = "${buildDir}/openapi"
     apiPackage = "io.kay.website.api"
     modelPackage = "io.kay.website.api.model"
@@ -84,13 +86,20 @@ openApiGenerate {
             library              : "quarkus",
             useJakartaEe         : "true",
             interfaceOnly        : "true",
+            generateRootResources: "false",
             serializableModel    : "true",
             useSwaggerAnnotations: "false",
+            useTags              : "true",
     ]
+}
+
+openApiValidate {
+    inputSpec = "$inputSpecFile"
 }
 
 quarkusGenerateDevAppModel.dependsOn('openApiGenerate')
 compileKotlin.dependsOn('openApiGenerate')
+tasks.findByName('openApiGenerate').dependsOn('openApiValidate')
 
 import org.jetbrains.kotlin.gradle.internal.KaptGenerateStubsTask
 
