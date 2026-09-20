@@ -1,0 +1,9 @@
+{
+  "name": "test organization",
+  "branch": "software testing",
+  "city": {
+    "country": "Country",
+    "city": "City"
+  },
+  "amountOfEmployees": 70
+}

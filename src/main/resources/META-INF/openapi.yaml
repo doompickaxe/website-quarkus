@@ -340,6 +340,7 @@ components:
           $ref: '#/components/schemas/City'
         amountOfEmployees:
           type: integer
+          format: int64
           description: Rough estimation of the amount of employees
 
     EducationPath:

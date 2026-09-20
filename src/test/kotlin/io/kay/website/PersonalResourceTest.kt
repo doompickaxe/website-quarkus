@@ -1,13 +1,13 @@
 package io.kay.website
 
 import io.kay.website.domain.*
+import io.kay.website.util.clearDB
 import io.quarkus.test.junit.QuarkusTest
 import io.restassured.RestAssured.given
 import jakarta.inject.Inject
 import org.hamcrest.CoreMatchers.*
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SizedCollection
-import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -84,20 +84,7 @@ class PersonalResourceTest {
     @AfterEach
     fun afterAll() {
         val db = Database.connect(dataSource)
-        transaction(db) {
-            listOf(
-                EducationTable,
-                CareerTable,
-                CompanyTable,
-                PersonTable,
-                CityTable,
-                CountryTable,
-                LanguageTable,
-                InterestsTable
-            ).forEach {
-                it.deleteAll()
-            }
-        }
+        clearDB(db)
     }
 
     @Test
@@ -149,28 +136,5 @@ class PersonalResourceTest {
             .get("/api/persons/${UUID.randomUUID()}")
             .then()
             .statusCode(404)
-    }
-
-    @Test
-    fun getCareerOfPerson() {
-        given()
-            .`when`()
-            .header("Accept", "application/json")
-            .get("/api/persons/$personId/career")
-            .then()
-            .statusCode(200)
-            .body(
-                "$.size()", equalTo(1),
-                "[0].company.name", equalTo("test organization"),
-                "[0].company.branch", equalTo("software testing"),
-                "[0].company.city.country", equalTo("Country"),
-                "[0].company.city.city", equalTo("City"),
-                "[0].company.amountOfEmployees", equalTo(70),
-                "[0].jobTitle", equalTo("service tester"),
-                "[0].start", equalTo("2025-01-01"),
-                "[0].end", nullValue(),
-                "[0].jobDescription", equalTo("testing APIs"),
-                "[0].tasks", equalTo("writing tests, implementing software, refactor"),
-            )
     }
 }

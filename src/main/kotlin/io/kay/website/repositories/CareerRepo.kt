@@ -8,6 +8,7 @@ import org.jetbrains.exposed.v1.core.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
+import io.kay.website.api.model.Company as ApiCompany
 
 @ApplicationScoped
 class CareerRepo {
@@ -48,6 +49,27 @@ class CareerRepo {
                     tasks = career.tasks
                     person = personToUse
                 }
+            }
+        }
+    }
+
+    fun findCompanyByName(name: String): Company? {
+        return transaction {
+            Company.find { CompanyTable.name eq name }.firstOrNull()
+        }
+    }
+
+    fun createCompany(company: ApiCompany): Company {
+        return transaction {
+            addLogger(Slf4jSqlDebugLogger)
+            val usedCity = City.find { CityTable.name eq company.city.city }.firstOrNull()
+                ?: throw NotFoundException("City ${company.city} not found")
+
+            Company.new {
+                name = company.name
+                branch = company.branch
+                city = usedCity
+                amountOfEmployees = company.amountOfEmployees
             }
         }
     }

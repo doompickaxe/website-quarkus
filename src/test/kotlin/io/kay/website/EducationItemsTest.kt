@@ -1,6 +1,7 @@
 package io.kay.website
 
 import io.kay.website.domain.*
+import io.kay.website.util.clearDB
 import io.quarkus.test.junit.QuarkusTest
 import io.quarkus.test.keycloak.client.KeycloakTestClient
 import io.restassured.RestAssured.given
@@ -9,7 +10,6 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.CoreMatchers.nullValue
 import org.jetbrains.exposed.v1.jdbc.Database
 import org.jetbrains.exposed.v1.jdbc.SizedCollection
-import org.jetbrains.exposed.v1.jdbc.deleteAll
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -83,20 +83,7 @@ class EducationItemsTest {
     @AfterEach
     fun afterAll() {
         val db = Database.connect(dataSource)
-        transaction(db) {
-            listOf(
-                EducationTable,
-                CareerTable,
-                CompanyTable,
-                PersonTable,
-                CityTable,
-                CountryTable,
-                LanguageTable,
-                InterestsTable
-            ).forEach {
-                it.deleteAll()
-            }
-        }
+        clearDB(db)
     }
 
     @Test
