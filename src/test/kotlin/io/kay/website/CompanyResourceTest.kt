@@ -1,6 +1,7 @@
 package io.kay.website
 
 import io.kay.website.domain.City
+import io.kay.website.domain.Company
 import io.kay.website.domain.Country
 import io.kay.website.util.clearDB
 import io.quarkus.test.junit.QuarkusTest
@@ -24,9 +25,12 @@ class CompanyResourceTest {
 
     private val keycloakClient = KeycloakTestClient()
 
+    private lateinit var db: Database
+    private lateinit var globalCity: City
+
     @BeforeEach
     fun beforeAll() {
-        val db = Database.connect(dataSource)
+        db = Database.connect(dataSource)
 
         transaction(db) {
             val savedCountry = Country.new {
@@ -34,7 +38,7 @@ class CompanyResourceTest {
                 code = "CC"
             }
 
-            City.new {
+            globalCity = City.new {
                 name = "City"
                 country = savedCountry
             }
@@ -100,6 +104,137 @@ class CompanyResourceTest {
             .statusCode(400)
             .body(
                 "message", equalTo("Company test organization already exists"),
+            )
+    }
+
+    @Test
+    fun retrieveCompanies() {
+        // create 3 test companies
+        transaction(db) {
+            Company.new {
+                name = "first company"
+                branch = "software testing"
+                city = globalCity
+                amountOfEmployees = 1
+            }
+
+            Company.new {
+                name = "second company"
+                branch = "hardware testing"
+                city = globalCity
+                amountOfEmployees = 2
+            }
+
+            Company.new {
+                name = "last company"
+                branch = "test testing"
+                city = globalCity
+                amountOfEmployees = 42
+            }
+        }
+
+        // without search
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/companies")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(3),
+            )
+
+        // filters to 'first'
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/companies?name=first")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(1),
+                "[0].name", equalTo("first company"),
+            )
+
+        // filters to 'last'
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/companies?name=last")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(1),
+                "[0].name", equalTo("last company"),
+            )
+
+        // filters to 'company'
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/companies?name=company")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(3),
+            )
+
+        // sql injection safe
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/companies?name=nothing' OR '1'='1")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(0),
+            )
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/companies?name=% || (SELECT id FROM cities LIMIT 1) || '")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(0),
+            )
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .queryParam("name", "%' || (pg_sleep(300)) || %'%")
+            .get("/api/companies")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(0),
+            )
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .get("/api/companies?name=\''DROP TABLE company;--")
+            .then()
+            .statusCode(200)
+            .body(
+                "$.size()", equalTo(0),
+            )
+
+        transaction(db) {
+            assert(Company.all().count() == 3L)
+        }
+
+        // handles too long query parameter
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .queryParam("name", (0..300).joinToString("") { "a" })
+            .get("/api/companies")
+            .then()
+            .statusCode(400)
+            .body(
+                "violations[0].message", equalTo("size must be between 0 and 100"),
             )
     }
 }

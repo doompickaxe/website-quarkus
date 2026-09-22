@@ -48,6 +48,14 @@ class CareerService(private val careerRepo: CareerRepo, private val careerMapper
         }
     }
 
+    fun findCompanies(name: String?): List<Company> {
+        LOGGER.info("Searching for companies with name '$name'")
+        return transaction {
+            val companies = careerRepo.searchCompanyByName(name)
+            companies.map { careerMapper.toApiCompany(it) }
+        }
+    }
+
     companion object {
         val LOGGER = LoggerFactory.getLogger(EducationService::class.java)
     }

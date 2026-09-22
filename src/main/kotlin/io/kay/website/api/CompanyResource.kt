@@ -14,4 +14,9 @@ class CompanyResource(
         }
         return careerService.createCompany(company)
     }
+
+    override fun getCompanies(name: String?): List<Company> {
+        println(name?.length)
+        return careerService.findCompanies(name)
+    }
 }

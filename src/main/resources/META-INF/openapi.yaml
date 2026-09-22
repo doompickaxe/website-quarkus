@@ -180,6 +180,31 @@ paths:
           description: An unexpected error has occurred
 
   /api/companies:
+    get:
+      tags:
+        - companies
+      description: Retrieve or search companies
+      operationId: getCompanies
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+            example: "Searching Comp"
+            maxLength: 100
+      responses:
+        '200':
+          description: All companies that match the search criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+        '400':
+          description: Invalid search criteria
+        '500':
+          description: An unexpected error has occurred
     post:
       tags:
         - companies

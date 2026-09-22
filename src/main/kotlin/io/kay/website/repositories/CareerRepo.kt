@@ -4,8 +4,8 @@ import io.kay.website.api.model.CareerItem
 import io.kay.website.domain.*
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.NotFoundException
-import org.jetbrains.exposed.v1.core.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.v1.core.eq
+import org.jetbrains.exposed.v1.core.like
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
 import io.kay.website.api.model.Company as ApiCompany
@@ -31,8 +31,6 @@ class CareerRepo {
 
     fun addNewCareerItemsOfPerson(personId: UUID, careerItems: List<CareerItem>) {
         return transaction {
-            addLogger(Slf4jSqlDebugLogger)
-
             val personToUse = Person.find { PersonTable.uuid eq personId }.firstOrNull()
                 ?: throw NotFoundException("Person with id $personId not found")
 
@@ -61,7 +59,6 @@ class CareerRepo {
 
     fun createCompany(company: ApiCompany): Company {
         return transaction {
-            addLogger(Slf4jSqlDebugLogger)
             val usedCity = City.find { CityTable.name eq company.city.city }.firstOrNull()
                 ?: throw NotFoundException("City ${company.city} not found")
 
@@ -71,6 +68,12 @@ class CareerRepo {
                 city = usedCity
                 amountOfEmployees = company.amountOfEmployees
             }
+        }
+    }
+
+    fun searchCompanyByName(name: String?): List<Company> {
+        return transaction {
+            Company.find { CompanyTable.name like "%${name ?: ""}%" }.toList()
         }
     }
 }
