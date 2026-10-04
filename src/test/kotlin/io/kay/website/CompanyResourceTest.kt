@@ -280,4 +280,45 @@ class CompanyResourceTest {
                 "amountOfEmployees", equalTo(42),
             )
     }
+
+    @Test
+    fun updateCompanyById() {
+        val uuid = UUID.randomUUID()
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .body(File(javaClass.getResource("/requests/company.json").file))
+            .put("/api/companies/$uuid")
+            .then()
+            .statusCode(404)
+
+        transaction(db) {
+            Company.new {
+                name = "test company"
+                branch = "test testing"
+                city = globalCity
+                amountOfEmployees = 42
+                this.uuid = uuid
+            }
+        }
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .body(File(javaClass.getResource("/requests/company.json").file))
+            .then()
+            .statusCode(200)
+            .body(
+                "name", equalTo("test organization"),
+                "branch", equalTo("software testing"),
+                "city.country", equalTo("Country"),
+                "city.city", equalTo("City"),
+                "amountOfEmployees", equalTo(70),
+            )
+    }
 }
