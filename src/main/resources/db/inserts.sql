@@ -3,8 +3,8 @@ VALUES ('Austria', 'AT'),
        ('Germany', 'DE'),
        ('France', 'FR');
 
-INSERT INTO city (name, country)
-VALUES ('Vienna', (SELECT id from country where code = 'AT' LIMIT 1));
+INSERT INTO city (name, country, uuid)
+VALUES ('Vienna', (SELECT id from country where code = 'AT' LIMIT 1), uuidv7());
 
 INSERT INTO person (uuid, first_name, last_name, birthday, email, phone, original_from, currently_in)
 VALUES (uuidv7(), 'John', 'Doe', '1980-01-01', 'some@email.xx', '0123456789',

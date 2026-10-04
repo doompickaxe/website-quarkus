@@ -1,6 +1,7 @@
 package io.kay.website.repositories
 
-import io.kay.website.api.model.CareerItem
+import io.kay.website.api.model.UpdateCareerItem
+import io.kay.website.api.model.UpsertCompany
 import io.kay.website.domain.*
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.NotFoundException
@@ -8,8 +9,11 @@ import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.core.like
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
-import io.kay.website.api.model.Company as ApiCompany
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+import kotlin.uuid.toJavaUuid
 
+@OptIn(ExperimentalUuidApi::class)
 @ApplicationScoped
 class CareerRepo {
 
@@ -29,7 +33,7 @@ class CareerRepo {
         }
     }
 
-    fun addNewCareerItemsOfPerson(personId: UUID, careerItems: List<CareerItem>) {
+    fun addNewCareerItemsOfPerson(personId: UUID, careerItems: List<UpdateCareerItem>) {
         return transaction {
             val personToUse = Person.find { PersonTable.uuid eq personId }.firstOrNull()
                 ?: throw NotFoundException("Person with id $personId not found")
@@ -57,7 +61,7 @@ class CareerRepo {
         }
     }
 
-    fun createCompany(company: ApiCompany): Company {
+    fun createCompany(company: UpsertCompany): Company {
         return transaction {
             val usedCity = City.find { CityTable.name eq company.city.city }.firstOrNull()
                 ?: throw NotFoundException("City ${company.city} not found")
@@ -67,6 +71,7 @@ class CareerRepo {
                 branch = company.branch
                 city = usedCity
                 amountOfEmployees = company.amountOfEmployees
+                uuid = Uuid.generateV7().toJavaUuid()
             }
         }
     }

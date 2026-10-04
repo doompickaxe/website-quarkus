@@ -2,6 +2,8 @@ package io.kay.website.service
 
 import io.kay.website.api.model.CareerItem
 import io.kay.website.api.model.Company
+import io.kay.website.api.model.UpdateCareerItem
+import io.kay.website.api.model.UpsertCompany
 import io.kay.website.mapper.CareerMapper
 import io.kay.website.repositories.CareerRepo
 import jakarta.enterprise.context.ApplicationScoped
@@ -20,7 +22,7 @@ class CareerService(private val careerRepo: CareerRepo, private val careerMapper
         }
     }
 
-    fun updateCareerPath(personId: UUID, careerItems: List<CareerItem>): List<CareerItem> {
+    fun updateCareerPath(personId: UUID, careerItems: List<UpdateCareerItem>): List<CareerItem> {
         if (!areCareerItemsValid(careerItems)) {
             throw BadRequestException("Career items end is before start")
         }
@@ -31,13 +33,13 @@ class CareerService(private val careerRepo: CareerRepo, private val careerMapper
         return getCareerOfPerson(personId).toList()
     }
 
-    private fun areCareerItemsValid(careerItems: List<CareerItem>): Boolean {
+    private fun areCareerItemsValid(careerItems: List<UpdateCareerItem>): Boolean {
         return careerItems.filter { it.end != null }
             .map { it.start.until(it.end) }
             .all { !it.isNegative }
     }
 
-    fun createCompany(company: Company): Company {
+    fun createCompany(company: UpsertCompany): Company {
         careerRepo.findCompanyByName(company.name)?.let {
             throw BadRequestException("Company ${company.name} already exists")
         }

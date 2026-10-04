@@ -41,6 +41,7 @@ class EducationItemsTest {
             val localCity = City.new {
                 name = "City"
                 country = savedCountry
+                uuid = UUID.randomUUID()
             }
 
             val savedPerson = Person.new {

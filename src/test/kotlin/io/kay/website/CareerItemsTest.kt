@@ -40,6 +40,7 @@ class CareerItemsTest {
             val localCity = City.new {
                 name = "City"
                 country = savedCountry
+                uuid = UUID.randomUUID()
             }
 
             val savedPerson = Person.new {
@@ -60,6 +61,7 @@ class CareerItemsTest {
                 branch = "software testing"
                 city = localCity
                 amountOfEmployees = 70
+                uuid = UUID.randomUUID()
             }
 
             Career.new {

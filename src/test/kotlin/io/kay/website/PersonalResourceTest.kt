@@ -37,6 +37,7 @@ class PersonalResourceTest {
             val localCity = City.new {
                 name = "City"
                 country = savedCountry
+                uuid = UUID.randomUUID()
             }
 
             val language = Language.new {
@@ -68,6 +69,7 @@ class PersonalResourceTest {
                 branch = "software testing"
                 city = localCity
                 amountOfEmployees = 70
+                uuid = UUID.randomUUID()
             }
 
             Career.new {

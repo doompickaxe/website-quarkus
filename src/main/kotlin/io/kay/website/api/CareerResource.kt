@@ -1,6 +1,7 @@
 package io.kay.website.api
 
 import io.kay.website.api.model.CareerItem
+import io.kay.website.api.model.UpdateCareerItem
 import io.kay.website.service.CareerService
 import jakarta.ws.rs.NotFoundException
 import java.util.*
@@ -17,7 +18,7 @@ class CareerResource(
         return careerService.getCareerOfPerson(id).toList()
     }
 
-    override fun updateCareerPath(id: UUID, careerItems: List<CareerItem>): List<CareerItem> {
+    override fun updateCareerPath(id: UUID, careerItems: List<UpdateCareerItem>): List<CareerItem> {
         return careerService.updateCareerPath(id, careerItems)
     }
 }

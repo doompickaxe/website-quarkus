@@ -15,6 +15,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.io.File
+import java.util.*
 import javax.sql.DataSource
 
 @QuarkusTest
@@ -41,6 +42,7 @@ class CompanyResourceTest {
             globalCity = City.new {
                 name = "City"
                 country = savedCountry
+                uuid = UUID.randomUUID()
             }
         }
     }
@@ -116,6 +118,7 @@ class CompanyResourceTest {
                 branch = "software testing"
                 city = globalCity
                 amountOfEmployees = 1
+                uuid = UUID.randomUUID()
             }
 
             Company.new {
@@ -123,6 +126,7 @@ class CompanyResourceTest {
                 branch = "hardware testing"
                 city = globalCity
                 amountOfEmployees = 2
+                uuid = UUID.randomUUID()
             }
 
             Company.new {
@@ -130,6 +134,7 @@ class CompanyResourceTest {
                 branch = "test testing"
                 city = globalCity
                 amountOfEmployees = 42
+                uuid = UUID.randomUUID()
             }
         }
 

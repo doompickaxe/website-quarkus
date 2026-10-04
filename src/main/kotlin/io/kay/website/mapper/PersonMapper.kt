@@ -8,9 +8,10 @@ import io.kay.website.domain.Language
 import org.mapstruct.Mapper
 import org.mapstruct.Mapping
 import org.mapstruct.MappingConstants
+import org.mapstruct.ReportingPolicy
 import io.kay.website.domain.Person as DomainPerson
 
-@Mapper(componentModel = MappingConstants.ComponentModel.CDI)
+@Mapper(componentModel = MappingConstants.ComponentModel.CDI, unmappedTargetPolicy = ReportingPolicy.IGNORE)
 @JvmDefaultWithoutCompatibility
 interface PersonMapper {
 
