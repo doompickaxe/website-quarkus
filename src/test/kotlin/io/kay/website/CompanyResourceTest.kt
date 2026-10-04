@@ -242,4 +242,42 @@ class CompanyResourceTest {
                 "violations[0].message", equalTo("size must be between 0 and 100"),
             )
     }
+
+    @Test
+    fun findCompanyById() {
+        val uuid = UUID.randomUUID()
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .get("/api/companies/$uuid")
+            .then()
+            .statusCode(404)
+
+        transaction(db) {
+            Company.new {
+                name = "test company"
+                branch = "test testing"
+                city = globalCity
+                amountOfEmployees = 42
+                this.uuid = uuid
+            }
+        }
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .get("/api/companies/$uuid")
+            .then()
+            .statusCode(200)
+            .body(
+                "name", equalTo("test company"),
+                "branch", equalTo("test testing"),
+                "city.country", equalTo("Country"),
+                "city.city", equalTo("City"),
+                "amountOfEmployees", equalTo(42),
+            )
+    }
 }
