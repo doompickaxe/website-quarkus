@@ -12,7 +12,7 @@ class CompanyResource(
 
     override fun createCompany(company: UpsertCompany?): Company {
         if (company == null) {
-            throw BadRequestException("Company is null")
+            throw BadRequestException("No request body was given")
         }
         return careerService.createCompany(company)
     }
@@ -29,6 +29,12 @@ class CompanyResource(
     }
 
     override fun updateCompany(id: UUID?, upsertCompany: UpsertCompany?): Company {
-        TODO("Not yet implemented")
+        if (id == null) {
+            throw BadRequestException("Identifier is null")
+        }
+        if (upsertCompany == null) {
+            throw BadRequestException("No request body was given")
+        }
+        return careerService.updateCompany(id, upsertCompany)
     }
 }

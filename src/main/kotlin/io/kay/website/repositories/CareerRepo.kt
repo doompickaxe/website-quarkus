@@ -87,4 +87,20 @@ class CareerRepo {
             Company.find { CompanyTable.uuid eq id }.firstOrNull()
         }
     }
+
+    fun updateCompany(id: UUID, upsertCompany: UpsertCompany): Company {
+        return transaction {
+            val company = findCompanyByUUID(id) ?: throw NotFoundException("Company with id $id not found")
+
+            val usedCity = City.find { CityTable.name eq upsertCompany.city.city }.firstOrNull()
+                ?: throw NotFoundException("City ${company.city} not found")
+
+            company.apply {
+                name = upsertCompany.name
+                branch = upsertCompany.branch
+                city = usedCity
+                amountOfEmployees = upsertCompany.amountOfEmployees
+            }
+        }
+    }
 }

@@ -4,7 +4,6 @@ import io.kay.website.api.model.EducationItem
 import io.kay.website.domain.*
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.NotFoundException
-import org.jetbrains.exposed.v1.core.Slf4jSqlDebugLogger
 import org.jetbrains.exposed.v1.core.and
 import org.jetbrains.exposed.v1.core.eq
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
@@ -31,8 +30,6 @@ class EducationRepo {
 
     fun addNewEducationItemsOfPerson(personId: UUID, educationItems: List<EducationItem>) {
         return transaction {
-            addLogger(Slf4jSqlDebugLogger)
-
             val personToUse = Person.find { PersonTable.uuid eq personId }.firstOrNull()
                 ?: throw NotFoundException("Person with id $personId not found")
 

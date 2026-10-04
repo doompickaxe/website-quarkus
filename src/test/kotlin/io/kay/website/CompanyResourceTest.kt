@@ -72,7 +72,7 @@ class CompanyResourceTest {
             .then()
             .statusCode(400)
             .body(
-                "message", equalTo("Company is null"),
+                "message", equalTo("No request body was given"),
             )
     }
 
@@ -311,6 +311,22 @@ class CompanyResourceTest {
             .header("Content-Type", "application/json")
             .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
             .body(File(javaClass.getResource("/requests/company.json").file))
+            .put("/api/companies/$uuid")
+            .then()
+            .statusCode(200)
+            .body(
+                "name", equalTo("test organization"),
+                "branch", equalTo("software testing"),
+                "city.country", equalTo("Country"),
+                "city.city", equalTo("City"),
+                "amountOfEmployees", equalTo(70),
+            )
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .get("/api/companies/$uuid")
             .then()
             .statusCode(200)
             .body(

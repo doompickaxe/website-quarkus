@@ -67,6 +67,13 @@ class CareerService(private val careerRepo: CareerRepo, private val careerMapper
         }
     }
 
+    fun updateCompany(id: UUID, upsertCompany: UpsertCompany): Company {
+        return transaction {
+            val company = careerRepo.updateCompany(id, upsertCompany)
+            careerMapper.toApiCompany(company)
+        }
+    }
+
     companion object {
         val LOGGER = LoggerFactory.getLogger(EducationService::class.java)
     }

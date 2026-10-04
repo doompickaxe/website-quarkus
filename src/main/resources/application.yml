@@ -52,8 +52,6 @@ quarkus:
   keycloak:
     devservices:
       realm-path: keycloak/quarkus-realm.json
-  info:
-    enabled: false
   log:
     level: DEBUG
 
