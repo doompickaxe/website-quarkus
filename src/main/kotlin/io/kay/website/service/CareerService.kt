@@ -8,6 +8,7 @@ import io.kay.website.mapper.CareerMapper
 import io.kay.website.repositories.CareerRepo
 import jakarta.enterprise.context.ApplicationScoped
 import jakarta.ws.rs.BadRequestException
+import jakarta.ws.rs.NotFoundException
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -55,6 +56,14 @@ class CareerService(private val careerRepo: CareerRepo, private val careerMapper
         return transaction {
             val companies = careerRepo.searchCompanyByName(name)
             companies.map { careerMapper.toApiCompany(it) }
+        }
+    }
+
+    fun findCompany(id: UUID): Company {
+        return transaction {
+            val company = careerRepo.findCompanyByUUID(id)
+                ?: throw NotFoundException("Company with id $id not found")
+            careerMapper.toApiCompany(company)
         }
     }
 

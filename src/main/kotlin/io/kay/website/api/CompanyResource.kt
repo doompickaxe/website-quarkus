@@ -22,7 +22,10 @@ class CompanyResource(
     }
 
     override fun getCompany(id: UUID?): Company? {
-        TODO("Not yet implemented")
+        if (id == null) {
+            throw BadRequestException("Identifier is null")
+        }
+        return careerService.findCompany(id)
     }
 
     override fun updateCompany(id: UUID?, upsertCompany: UpsertCompany?): Company {

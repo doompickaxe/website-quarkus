@@ -81,4 +81,10 @@ class CareerRepo {
             Company.find { CompanyTable.name like "%${name ?: ""}%" }.toList()
         }
     }
+
+    fun findCompanyByUUID(id: UUID): Company? {
+        return transaction {
+            Company.find { CompanyTable.uuid eq id }.firstOrNull()
+        }
+    }
 }
