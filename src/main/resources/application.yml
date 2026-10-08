@@ -34,6 +34,10 @@ quarkus:
   container-image:
     build: true
     name: website
+  package:
+    jar:
+      aot:
+        enabled: true
   analytics:
     disabled: true
   banner:

@@ -62,6 +62,35 @@ paths:
           description: Could not find person
         '500':
           description: An unexpected error has occurred
+    put:
+      tags:
+        - persons
+      description: Update information of person with given id
+      operationId: updatePersonalInformation
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            format: uuid
+            example: 'a6f0c66e-ad09-4139-9845-8e8bb4e1a9a5'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePersonalInformation'
+      responses:
+        '200':
+          description: Updated personal information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInformation'
+        '404':
+          description: Could not find person
+        '500':
+          description: An unexpected error has occurred
 
   /api/persons/{id}/career:
     get:
@@ -321,12 +350,11 @@ components:
           type: string
           example: Doe
 
-    PersonalInformation:
+    BasePersonalInformation:
       type: object
       required:
         - firstName
         - lastName
-        - age
         - email
         - languages
         - interests
@@ -338,11 +366,6 @@ components:
         lastName:
           type: string
           example: "Mustermann"
-        age:
-          type: integer
-          format: int32
-          example: 33
-          minimum: 0
         email:
           type: string
           example: "sample@email.com"
@@ -363,6 +386,31 @@ components:
           items:
             type: string
             example: "Writing OpenAPI specs"
+
+    PersonalInformation:
+      allOf:
+        - $ref: '#/components/schemas/BasePersonalInformation'
+        - type: object
+          required:
+            - age
+          properties:
+            age:
+              type: integer
+              format: int32
+              example: 33
+              minimum: 0
+
+    UpdatePersonalInformation:
+      allOf:
+        - $ref: '#/components/schemas/BasePersonalInformation'
+        - type: object
+          required:
+            - birthday
+          properties:
+            birthday:
+              type: string
+              format: date
+              example: "1996-09-24"
 
     City:
       type: object
