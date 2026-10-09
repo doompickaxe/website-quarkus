@@ -3,6 +3,7 @@ package io.kay.website
 import io.kay.website.domain.*
 import io.kay.website.util.clearDB
 import io.quarkus.test.junit.QuarkusTest
+import io.quarkus.test.keycloak.client.KeycloakTestClient
 import io.restassured.RestAssured.given
 import jakarta.inject.Inject
 import org.hamcrest.CoreMatchers.*
@@ -12,7 +13,9 @@ import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.time.LocalDate
+import java.time.Period
 import java.util.*
 import javax.sql.DataSource
 
@@ -23,6 +26,7 @@ class PersonalResourceTest {
     private lateinit var dataSource: DataSource
 
     private lateinit var personId: UUID
+    private val keycloakClient = KeycloakTestClient()
 
     @BeforeEach
     fun beforeAll() {
@@ -138,5 +142,61 @@ class PersonalResourceTest {
             .get("/api/persons/${UUID.randomUUID()}")
             .then()
             .statusCode(404)
+    }
+
+    @Test
+    fun updateOnePerson() {
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .body(File(javaClass.getResource("/requests/person/person.json").file))
+            .put("/api/persons/$personId")
+            .then()
+            .statusCode(200)
+            .body(
+                "firstName", equalTo("Max"),
+                "lastName", equalTo("Mustermann"),
+                // age changes every year
+                "age", equalTo(Period.between(LocalDate.of(1966, 8, 23), LocalDate.now()).years),
+                "email", equalTo("sample@email.com"),
+                "phoneNumber", equalTo("+43618999997"),
+                "originalFrom.city", equalTo("City"),
+                "originalFrom.country", equalTo("Country"),
+                "currentlyLivingIn.city", equalTo("City"),
+                "currentlyLivingIn.country", equalTo("Country"),
+                "languages", hasItems("English", "German"),
+                "interests", hasItems("Writing OpenAPI specs", "Executing tests"),
+            )
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .body(File(javaClass.getResource("/requests/person/person.json").file))
+            .put("/api/persons/unknown")
+            .then()
+            .statusCode(404)
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .body(File(javaClass.getResource("/requests/person/person.json").file))
+            .put("/api/persons/${UUID.randomUUID()}")
+            .then()
+            .statusCode(404)
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .put("/api/persons/$personId")
+            .then()
+            .statusCode(400)
     }
 }

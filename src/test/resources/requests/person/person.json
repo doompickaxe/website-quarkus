@@ -1,0 +1,23 @@
+{
+  "firstName": "Max",
+  "lastName": "Mustermann",
+  "birthday": "1966-08-23",
+  "email": "sample@email.com",
+  "phoneNumber": "+43618999997",
+  "originalFrom": {
+    "city": "City",
+    "country": "Country"
+  },
+  "currentlyLivingIn": {
+    "city": "City",
+    "country": "Country"
+  },
+  "languages": [
+    "English",
+    "German"
+  ],
+  "interests": [
+    "Writing OpenAPI specs",
+    "Executing tests"
+  ]
+}
