@@ -36,6 +36,27 @@ paths:
                 $ref: '#/components/schemas/Persons'
         '500':
           description: An unexpected error has occurred
+    post:
+      tags:
+        - persons
+      description: Create a new person
+      operationId: createPerson
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePersonalInformation'
+      responses:
+        '201':
+          description: Created person
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonalInformation'
+        '400':
+          description: Given information is invalid
+        '500':
+          description: An unexpected error has occurred
 
   /api/persons/{id}:
     get:
