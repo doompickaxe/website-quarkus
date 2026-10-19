@@ -30,4 +30,9 @@ class PersonService(private val personRepo: PersonRepo, private val personMapper
         val updatedPerson = personRepo.updatePerson(person, update)
         personMapper.toApiPersonalInformation(updatedPerson)
     }
+
+    fun createPerson(request: UpdatePersonalInformation) = transaction {
+        val createdPerson = personRepo.createPerson(request)
+        personMapper.toApiPersonalInformation(createdPerson)
+    }
 }

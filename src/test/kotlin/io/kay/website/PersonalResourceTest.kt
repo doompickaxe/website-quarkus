@@ -202,7 +202,7 @@ class PersonalResourceTest {
 
     @Test
     fun createPerson() {
-        val createdId = given()
+        given()
             .`when`()
             .header("Accept", "application/json")
             .header("Content-Type", "application/json")
@@ -225,16 +225,23 @@ class PersonalResourceTest {
                 "languages", hasItems("English", "German"),
                 "interests", hasItems("Writing OpenAPI specs", "Executing tests"),
             )
+
+        val createdId = given()
+            .`when`()
+            .header("Accept", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .get("/api/persons")
+            .then()
+            .statusCode(200)
             .extract()
             .jsonPath()
-            .getUUID("id")
+            .getUUID("id[1]")
 
         given()
             .`when`()
             .header("Accept", "application/json")
-            .header("Content-Type", "application/json")
             .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
-            .put("/api/persons/$createdId")
+            .get("/api/persons/$createdId")
             .then()
             .statusCode(200)
             .body(

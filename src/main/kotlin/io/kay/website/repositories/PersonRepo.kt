@@ -9,6 +9,9 @@ import org.jetbrains.exposed.v1.jdbc.SizedCollection
 import org.jetbrains.exposed.v1.jdbc.deleteWhere
 import org.jetbrains.exposed.v1.jdbc.transactions.transaction
 import java.util.*
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+import kotlin.uuid.toJavaUuid
 
 @ApplicationScoped
 class PersonRepo {
@@ -60,5 +63,34 @@ class PersonRepo {
 
     fun createMissingInterest(interest: String) = transaction {
         Interests.new { name = interest }
+    }
+
+    @OptIn(ExperimentalUuidApi::class)
+    fun createPerson(request: UpdatePersonalInformation) = transaction {
+        val currentCity = City.find { CityTable.name eq request.currentlyLivingIn.city }.firstOrNull()
+            ?: throw NotFoundException("City ${request.currentlyLivingIn.city} not found")
+
+        val bornCity = City.find { CityTable.name eq request.originalFrom.city }.firstOrNull()
+
+        val languages = request.languages
+            .map { Language.find { LanguageTable.name eq it }.firstOrNull() ?: createMissingLanguage(it) }
+
+        val interests = request.interests
+            .map { Interests.find { InterestsTable.name eq it }.firstOrNull() ?: createMissingInterest(it) }
+
+        val person = Person.new {
+            uuid = Uuid.generateV7().toJavaUuid()
+            firstName = request.firstName
+            lastName = request.lastName
+            birthday = request.birthday
+            email = request.email
+            phone = request.phoneNumber
+            bornCity?.let { originalFrom = it }
+            currentlyLivingIn = currentCity
+        }
+
+        person.languages = SizedCollection(languages)
+        person.interests = SizedCollection(interests)
+        person
     }
 }

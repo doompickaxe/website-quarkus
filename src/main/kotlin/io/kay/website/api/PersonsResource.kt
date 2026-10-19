@@ -4,7 +4,6 @@ import io.kay.website.api.model.Person
 import io.kay.website.api.model.PersonalInformation
 import io.kay.website.api.model.UpdatePersonalInformation
 import io.kay.website.service.PersonService
-import jakarta.validation.Valid
 import jakarta.ws.rs.BadRequestException
 import jakarta.ws.rs.NotFoundException
 import java.util.*
@@ -36,7 +35,11 @@ class PersonsResource(
         return personService.getPerson(id) ?: throw NotFoundException("Person not found")
     }
 
-    override fun createPerson(updatePersonalInformation: @Valid UpdatePersonalInformation?): PersonalInformation? {
-        TODO("Not yet implemented")
+    override fun createPerson(updatePersonalInformation: UpdatePersonalInformation?): PersonalInformation {
+        if (updatePersonalInformation == null) {
+            throw BadRequestException("No body was given")
+        }
+
+        return personService.createPerson(updatePersonalInformation)
     }
 }
