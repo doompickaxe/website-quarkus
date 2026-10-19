@@ -199,4 +199,57 @@ class PersonalResourceTest {
             .then()
             .statusCode(400)
     }
+
+    @Test
+    fun createPerson() {
+        val createdId = given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .body(File(javaClass.getResource("/requests/person/person.json").file))
+            .post("/api/persons")
+            .then()
+            .statusCode(201)
+            .body(
+                "firstName", equalTo("Max"),
+                "lastName", equalTo("Mustermann"),
+                // age changes every year
+                "age", equalTo(Period.between(LocalDate.of(1966, 8, 23), LocalDate.now()).years),
+                "email", equalTo("sample@email.com"),
+                "phoneNumber", equalTo("+43618999997"),
+                "originalFrom.city", equalTo("City"),
+                "originalFrom.country", equalTo("Country"),
+                "currentlyLivingIn.city", equalTo("City"),
+                "currentlyLivingIn.country", equalTo("Country"),
+                "languages", hasItems("English", "German"),
+                "interests", hasItems("Writing OpenAPI specs", "Executing tests"),
+            )
+            .extract()
+            .jsonPath()
+            .getUUID("id")
+
+        given()
+            .`when`()
+            .header("Accept", "application/json")
+            .header("Content-Type", "application/json")
+            .auth().oauth2(keycloakClient.getRealmClientAccessToken("quarkus", "backend-service", "secret"))
+            .put("/api/persons/$createdId")
+            .then()
+            .statusCode(200)
+            .body(
+                "firstName", equalTo("Max"),
+                "lastName", equalTo("Mustermann"),
+                // age changes every year
+                "age", equalTo(Period.between(LocalDate.of(1966, 8, 23), LocalDate.now()).years),
+                "email", equalTo("sample@email.com"),
+                "phoneNumber", equalTo("+43618999997"),
+                "originalFrom.city", equalTo("City"),
+                "originalFrom.country", equalTo("Country"),
+                "currentlyLivingIn.city", equalTo("City"),
+                "currentlyLivingIn.country", equalTo("Country"),
+                "languages", hasItems("English", "German"),
+                "interests", hasItems("Writing OpenAPI specs", "Executing tests"),
+            )
+    }
 }
